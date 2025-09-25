@@ -4,6 +4,10 @@ body {
     padding: 20px;
 }
 
+#notesConatiner {
+    position: relative;
+}
+
 #noteText {
     width: 250px;
     min-height: 150px;

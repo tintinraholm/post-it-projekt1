@@ -9,13 +9,9 @@
     <script src="notes.js" defer></script>
 </head>
 
-<body>
+<body ondrop="dropHandler(event)" ondragover="dragoverHandler(event)">
     <h1>My notes</h1>
-    <div class="notes">
-        <textarea id="noteText" rows="3" cols="40" placeholder="Write your note here"></textarea><br>
-        <button id="addBtn">Create</button>
-    </div>
-
+    <button id="newNoteBtn">New note</button>
     <div id="notesContainer"></div>
 
 </body>
