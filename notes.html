@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="notes.css">
-    <script src="notes.js"></script>
+    <script src="notes.js" defer></script>
 </head>
+
 <body>
-    
+    <h1>My notes</h1>
+    <div class="notes">
+        <textarea id="noteText" rows="3" cols="40" placeholder="Write your note here"></textarea><br>
+        <button id="addBtn">Create</button>
+    </div>
+
+    <div id="notesContainer"></div>
+
 </body>
+
 </html>
