@@ -1,4 +1,18 @@
+const messageOutput = document.getElementById("message");
 
+document.getElementById("showRegister").addEventListener("click", (e) => {
+    e.preventDefault();
+    loginForm.style.display = "none";
+    registerForm.style.display = "block";
+    messageOutput.textContent = "";
+});
+
+document.getElementById("showLogin").addEventListener("click", (e) => {
+    e.preventDefault();
+    registerForm.style.display = "none";
+    loginForm.style.display = "block";
+    messageOutput.textContent = "";
+});
 
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -18,10 +32,16 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
         const data = await res.json();
         console.log("Register response:", data);
-        alert(data.msg || "Registrering klar");
+        if (res.ok) {
+            messageEl.textContent = "Registrering lyckades! Du kan logga in.";
+            registerForm.style.display = "none";
+            loginForm.style.display = "block";
+        } else {
+            messageOutput.textContent = data.msg || "Registrering misslyckades.";
+        }
     } catch (error) {
         console.error("Fel vid registrering", error)
-        alert("något gick fel")
+        messageOutput.textContent = "Något gick fel. Försök igen.";
     }
 
 });
@@ -45,24 +65,27 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         if (res.ok) {
             console.log("Login response:", data);
             localStorage.setItem("jwtToken", data.token);
-            alert("Inloggning lyckades!");
+            messageOutput.textContent = "Inloggning lyckades!";
+
+            document.getElementById("authContainer").style.display = "none";
+            boardsContainer.style.display = "block";
 
             fetchBoards();
         } else {
-            alert(data.msg || "Fel vid inloggning");
+            messageOutput.textContent = data.msg || "Fel vid inloggning.";
         }
     } catch (error) {
         console.error("Fel vid login:", error);
-        alert("Något gick fel, försök igen.");
+        messageOutput.textContent = "Något gick fel. Försök igen.";
     }
 });
 
-async function fetchBoards() {
+/** async function fetchBoards() {
     // Hämta JWT från localStorage
     const token = localStorage.getItem("jwtToken");
 
     if (!token) {
-        alert("Du måste logga in först!");
+        messageOutput = "Du måste logga in först!"
         return;
     }
 
@@ -90,11 +113,13 @@ async function fetchBoards() {
 
             console.log("Boards hämtade:", data);
         } else {
-            alert(data.msg || "Kunde inte hämta boards.");
+            messageOutput.textContent = data.msg || "Kunde inte hämta boards.";
         }
     } catch (error) {
         console.error("Fel vid hämtning av boards:", error);
-        alert("Något gick fel. Försök igen.");
+        messageOutput.textContent = "Något gick fel. Försök igen.";  
     }
-}
+} */
+
+
 

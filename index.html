@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="sv">
-
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login / Register</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Register</title>
+    <script src="form.js" defer></script>
 </head>
 
 <body>
   <h1>Välkommen</h1>
 
   <!-- Inloggnings-formulär -->
-
+<div id="authContainer">
   <form id="loginForm">
     <h3>Logga in:</h3>
     <label>Email</label>
@@ -19,10 +19,13 @@
     <label>Lösenord</label>
     <input type="password" id="loginPassword" required><br>
     <button type="sumbit">Logga in</button>
+            <p>
+      Har du inget konto? <a href="#" id="showRegister">Registrera dig</a>
+    </p>
   </form>
 
   <!-- Registrerings-formulär -->
-  <form id="registerForm">
+  <form id="registerForm" style="display: none;">
     <h3>Registrera dig:</h3>
     <label>Användarnamn</label>
     <input type="text" id="registerUsername" required><br>
@@ -31,12 +34,21 @@
     <label>Lösenord</label>
     <input type="password" id="registerPassword" required><br>
     <button type="sumbit">Registrera dig</button>
+     <p>
+      Har du redan konto? <a href="#" id="showLogin">Logga in</a>
+    </p>
   </form>
 
-  <ul id="boardsList"></ul>
+  <p id="message"></p>
+  </div>
 
-  <!--Script-filen för att skicka info från formulär till API:n-->
-  <script src="form.js"></script>
+  <!-- <div id="boardsContainer" style="display: none;">
+  <h2>Mina Boards</h2>
+  <ul id="boardsList"></ul>
+  <button id="logoutBtn">Logga ut</button>
+</div> -->
+
+
 
 </body>
 
