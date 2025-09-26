@@ -70,7 +70,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             document.getElementById("authContainer").style.display = "none";
             boardsContainer.style.display = "block";
 
-            fetchBoards();
+            //fetchBoards();
         } else {
             messageOutput.textContent = data.msg || "Fel vid inloggning.";
         }

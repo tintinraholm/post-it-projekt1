@@ -1,45 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login/Register</title>
-    <script src="form.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login/Register</title>
+  <link rel="stylesheet" href="drawings.css">
+  <link rel="stylesheet" href="notes.css">
+  <script src="form.js" defer></script>
+  <script src="drawings.js" defer></script>
+  <script src="notes.js" defer></script>
 </head>
 
-<body>
+<body ondrop="dropHandler(event)" ondragover="dragoverHandler(event)">
   <h1>Välkommen</h1>
 
   <!-- Inloggnings-formulär -->
-<div id="authContainer">
-  <form id="loginForm">
-    <h3>Logga in:</h3>
-    <label>Email</label>
-    <input type="text" id="loginEmail" required><br>
-    <label>Lösenord</label>
-    <input type="password" id="loginPassword" required><br>
-    <button type="sumbit">Logga in</button>
-            <p>
-      Har du inget konto? <a href="#" id="showRegister">Registrera dig</a>
-    </p>
-  </form>
+  <div id="authContainer">
+    <form id="loginForm">
+      <h3>Logga in:</h3>
+      <label>Email</label>
+      <input type="text" id="loginEmail" required><br>
+      <label>Lösenord</label>
+      <input type="password" id="loginPassword" required><br>
+      <button type="sumbit">Logga in</button>
+      <p>
+        Har du inget konto? <a href="#" id="showRegister">Registrera dig</a>
+      </p>
+    </form>
 
-  <!-- Registrerings-formulär -->
-  <form id="registerForm" style="display: none;">
-    <h3>Registrera dig:</h3>
-    <label>Användarnamn</label>
-    <input type="text" id="registerUsername" required><br>
-    <label>Email</label>
-    <input type="email" id="registerEmail" required><br>
-    <label>Lösenord</label>
-    <input type="password" id="registerPassword" required><br>
-    <button type="sumbit">Registrera dig</button>
-     <p>
-      Har du redan konto? <a href="#" id="showLogin">Logga in</a>
-    </p>
-  </form>
+    <!-- Registrerings-formulär -->
+    <form id="registerForm" style="display: none;">
+      <h3>Registrera dig:</h3>
+      <label>Användarnamn</label>
+      <input type="text" id="registerUsername" required><br>
+      <label>Email</label>
+      <input type="email" id="registerEmail" required><br>
+      <label>Lösenord</label>
+      <input type="password" id="registerPassword" required><br>
+      <button type="sumbit">Registrera dig</button>
+      <p>
+        Har du redan konto? <a href="#" id="showLogin">Logga in</a>
+      </p>
+    </form>
 
-  <p id="message"></p>
+    <p id="message"></p>
   </div>
 
   <!-- <div id="boardsContainer" style="display: none;">
@@ -48,8 +53,19 @@
   <button id="logoutBtn">Logga ut</button>
 </div> -->
 
+  <div id="notesSection">
+    <h1>My notes</h1>
+    <button id="newNoteBtn">New note</button>
+    <div id="notesContainer"></div>
+  </div>
 
+  <div id="drawingSection">
+    <button id="newDrawingBtn">New drawing</button>
 
+    <div id="newDrawingContainer"></div>
+
+    <div id="boardsContainer"></div>
+  </div>
 </body>
 
 </html>

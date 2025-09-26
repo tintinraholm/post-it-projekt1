@@ -20,7 +20,6 @@ function dropHandler(ev) {
     //ev.target.appendChild(note);
 }
 
-
 const addBtn = document.getElementById("addBtn");
 const noteText = document.getElementById("noteText");
 
@@ -93,7 +92,6 @@ newNoteBtn.addEventListener("click", () => {
             });
     })
 })
-
 
 
 
