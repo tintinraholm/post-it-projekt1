@@ -1,0 +1,115 @@
+body {
+    background: #f4f4f9;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+#notesConatiner {
+    position: relative;
+}
+
+#noteText {
+    width: 250px;
+    min-height: 150px;
+    background: #fffa63;
+    font-size: 20px;
+    text-align: center;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#addBtn {
+  background-color: darkgray;
+  border: none;
+  border-radius: 8px;
+  color: black;
+  margin-top: 10px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#addBtn:hover {
+  color: white;
+}
+
+.note {
+    width: 250px;
+    min-height: 150px;
+    background: pink;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    margin: 10px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.note-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.square {
+    width: 12px;
+    height: 12px;
+    border-radius: 0;
+    display: inline-block;
+}
+
+.square.yellow {
+    background: #f9f871;
+}
+
+.square.green {
+    background: #77dd77;
+}
+
+.square.pink {
+    background: #ff77ff;
+}
+
+.note.yellow {
+    background: #f9f871;
+}
+
+.note.green {
+    background: #77dd77;
+}
+
+.note.pink {
+    background: #ff77ff;
+}
+
+.remove-btn {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #333;
+}
+
+.remove-btn:hover {
+    color: red;
+}
+
+.note-content {
+    white-space: pre-line;
+    font-size: 20px;
+    text-align: center;
+}
