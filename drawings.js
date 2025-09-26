@@ -64,6 +64,8 @@ function createCanvas(strokes, id, isNew, container) {
     canvas.addEventListener("mousedown", e => {
         drawing = true
         currentStroke = [{ x: e.offsetX, y: e.offsetY }]
+        ctx.beginPath()
+        ctx.moveTo(e.offsetX, e.offsetY)
     })
     canvas.addEventListener("mousemove", e => {
         if (!drawing) return
