@@ -23,6 +23,13 @@ function dropHandler(ev) {
 const addBtn = document.getElementById("addBtn");
 const noteText = document.getElementById("noteText");
 
+/*document.getElementById("newNoteBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    newNoteBtn.style.display = "none";
+    loginForm.style.display = "block";
+    messageOutput.textContent = "";
+});*/
+
 newNoteBtn.addEventListener("click", () => {
     console.log("new note button clicked")
     const editor = document.createElement("div");

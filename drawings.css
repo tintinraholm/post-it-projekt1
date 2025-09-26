@@ -17,6 +17,7 @@ body {
     border: none;
     border-radius: 5px;
 }
+
 #newDrawingBtn:hover {
     background: #45a049;
 }

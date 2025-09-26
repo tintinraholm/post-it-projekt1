@@ -4,10 +4,21 @@ body {
     padding: 20px;
 }
 
-#notesConatiner {
+#notesContainer {
     position: relative;
-    display: none;
 }
+
+#newNoteBtn {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
 
 #noteText {
     width: 250px;

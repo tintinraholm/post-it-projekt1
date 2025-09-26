@@ -68,11 +68,15 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             messageOutput.textContent = "Inloggning lyckades!";
 
             document.getElementById("authContainer").style.display = "none";
-            boardsContainer.style.display = "block";
+            //oardsContainer.style.display = "block";
+            document.getElementById("myPage").style.display = "block";
+
+            // Hämta notes från backend
+            //fetchNotes();
 
             //fetchBoards();
         } else {
-            messageOutput.textContent = data.msg || "Fel vid inloggning.";
+            messageOutput.textContent = "Fel lösenord eller e-post";
         }
     } catch (error) {
         console.error("Fel vid login:", error);
@@ -119,7 +123,42 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         console.error("Fel vid hämtning av boards:", error);
         messageOutput.textContent = "Något gick fel. Försök igen.";  
     }
-} */
+}
+
+async function fetchNotes() {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) return;
+
+    try {
+        const res = await fetch("http://localhost:8080/notes", {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await res.json();
+        const notesContainer = document.getElementById("notesContainer");
+        notesContainer.innerHTML = "";
+
+        data.forEach(note => {
+            const noteDiv = document.createElement("div");
+            noteDiv.className = "note";
+            noteDiv.innerHTML = `
+        <div class="note-header">
+          <button class="remove-btn">&times;</button>
+        </div>
+        <textarea class="note-content">${note.text}</textarea>
+      `;
+            notesContainer.appendChild(noteDiv);
+        });
+
+        console.log("Fetched notes:", data);
+    } catch (error) {
+        console.error("Fel vid hämtning av notes:", error);
+    }
+}*/
+
 
 
 
