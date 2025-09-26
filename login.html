@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 <html lang="sv">
+
 <head>
   <meta charset="UTF-8">
-    <title>Login / Register</title>
-  
-  </head>
-  <body>
-     <h1>Välkommen</h1>
+  <title>Login / Register</title>
+
+</head>
+
+<body>
+  <h1>Välkommen</h1>
 
   <!-- Inloggnings-formulär -->
 
   <form id="loginForm">
     <h3>Logga in:</h3>
-    <label>Användarnamn</label>
-    <input type="text" id="loginUsername" required><br>
+    <label>Email</label>
+    <input type="text" id="loginEmail" required><br>
     <label>Lösenord</label>
     <input type="password" id="loginPassword" required><br>
     <button type="sumbit">Logga in</button>
   </form>
- 
+
   <!-- Registrerings-formulär -->
-   <form id="registerForm">
+  <form id="registerForm">
     <h3>Registrera dig:</h3>
     <label>Användarnamn</label>
     <input type="text" id="registerUsername" required><br>
+    <label>Email</label>
+    <input type="email" id="registerEmail" required><br>
     <label>Lösenord</label>
     <input type="password" id="registerPassword" required><br>
     <button type="sumbit">Registrera dig</button>
-   </form>
-  
-  </body>
+  </form>
+
+  <ul id="boardsList"></ul>
+
+  <!--Script-filen för att skicka info från formulär till API:n-->
+  <script src="form.js"></script>
+
+</body>
+
 </html>
