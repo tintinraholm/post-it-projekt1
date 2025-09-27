@@ -46,7 +46,7 @@ newNoteBtn.addEventListener("click", () => {
         if (!text) return;
 
         // POST to backend
-        fetch("http://localhost:8080/notes", {
+        fetch("http://localhost:8070/notes", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ author_id: 1, text: text })
@@ -79,7 +79,7 @@ newNoteBtn.addEventListener("click", () => {
 
                 // DELETE Back- and frontend
                 newNote.querySelector(".remove-btn").addEventListener("click", () => {
-                    fetch(`http://localhost:8080/notes/${dbId}`, { method: "DELETE" })
+                    fetch(`http://localhost:8070/notes/${dbId}`, { method: "DELETE" })
                         .then(res => res.json())
                         .then(delData => {
                             console.log("Deleted note:", delData);
