@@ -72,7 +72,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             document.getElementById("myPage").style.display = "block";
 
             // Hämta notes från backend
-            //fetchNotes();
+            fetchNotes();
 
             //fetchBoards();
         } else {
@@ -123,14 +123,14 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         console.error("Fel vid hämtning av boards:", error);
         messageOutput.textContent = "Något gick fel. Försök igen.";  
     }
-}
+} */
 
 async function fetchNotes() {
     const token = localStorage.getItem("jwtToken");
     if (!token) return;
 
     try {
-        const res = await fetch("http://localhost:8080/notes", {
+        const res = await fetch("http://localhost:8070/notes", {
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
@@ -148,7 +148,7 @@ async function fetchNotes() {
         <div class="note-header">
           <button class="remove-btn">&times;</button>
         </div>
-        <textarea class="note-content">${note.text}</textarea>
+        <textarea class="note-content">${note.note}</textarea>
       `;
             notesContainer.appendChild(noteDiv);
         });
@@ -157,7 +157,7 @@ async function fetchNotes() {
     } catch (error) {
         console.error("Fel vid hämtning av notes:", error);
     }
-}*/
+}
 
 
 
