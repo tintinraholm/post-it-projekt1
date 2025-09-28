@@ -98,7 +98,7 @@ function createCanvas(strokes, id, isNew, container) {
     // POST
     if (saveBtn) {
         saveBtn.addEventListener("click", () => {
-            fetch("http://localhost:8070/drawings", {
+            fetch("http://localhost:8080/drawings", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ author_id: 1, drawing: strokes })
@@ -114,7 +114,7 @@ function createCanvas(strokes, id, isNew, container) {
     // PUT
     if (updateBtn) {
         updateBtn.addEventListener("click", () => {
-            fetch(`http://localhost:8070/drawings/${id}`, {
+            fetch(`http://localhost:8080/drawings/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ drawing: strokes })
@@ -126,7 +126,7 @@ function createCanvas(strokes, id, isNew, container) {
     // DELETE
     if (deleteBtn) {
         deleteBtn.addEventListener("click", () => {
-            fetch(`http://localhost:8070/drawings/${id}`, { method: "DELETE" })
+            fetch(`http://localhost:8080/drawings/${id}`, { method: "DELETE" })
                 .then(res => res.json())
                 .then(() => canvasDiv.remove())
         })
@@ -134,7 +134,7 @@ function createCanvas(strokes, id, isNew, container) {
 }
 
 // GET
-fetch("http://localhost:8070/drawings")
+fetch("http://localhost:8080/drawings")
     .then(res => res.json())
     .then(data => {
         data.forEach(d => {

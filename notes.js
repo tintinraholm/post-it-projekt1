@@ -18,8 +18,8 @@ newNoteBtn.addEventListener("click", () => {
     editor.className = "notes-editor";
 
     editor.innerHTML = `
-        <textarea rows="3" cols="40" placeholder="Write your note here"></textarea><br>
-        <button class="addBtn">Create</button>
+        <textarea rows="3" cols="40" placeholder="Skriv din nya anteckning här"></textarea><br>
+        <button class="addBtn">Skapa</button>
       `;
     notesContainer.appendChild(editor);
 
@@ -28,7 +28,7 @@ newNoteBtn.addEventListener("click", () => {
         if (!text) return;
 
         // POST to backend
-        fetch("http://localhost:8070/notes", {
+        fetch("http://localhost:8080/notes", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ author_id: 1, text: text })
@@ -56,18 +56,37 @@ newNoteBtn.addEventListener("click", () => {
                 </div>
                 <button class="remove-btn">&times;</button>
             </div>
-            <textarea class="note-content" rows="6">${text}</textarea>
+            <textarea class="note-content">${text}</textarea>
+            <button id="saveButton">Spara ändringar</button>
         `;
 
                 // DELETE Back- and frontend
                 newNote.querySelector(".remove-btn").addEventListener("click", () => {
-                    fetch(`http://localhost:8070/notes/${dbId}`, { method: "DELETE" })
+                    fetch(`http://localhost:8080/notes/${dbId}`, { method: "DELETE" })
                         .then(res => res.json())
                         .then(delData => {
                             console.log("Deleted note:", delData);
                             newNote.remove();
                         })
                         .catch(err => console.error(err));
+                });
+                // Uppdatera en existerande note
+                newNote.querySelector('#saveButton').addEventListener("click", () => {
+                    const updatedNote = newNote.querySelector(".note-content").value;
+
+                    fetch(`http://localhost:8080/notes/${dbId}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ text: updatedNote })
+                    })
+                        .then(res => res.json())
+                        .then(updatedData => {
+                            console.log("Note updated: ", updatedData);
+                            alert("Din uppdaterade anteckning sparad!");
+                        })
+                        .catch(err => console.error("Error updating note: ", err));
                 });
                 newNote.querySelectorAll(".square").forEach(square => {
                     square.addEventListener("click", () => {
