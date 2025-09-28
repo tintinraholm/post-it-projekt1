@@ -23,7 +23,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const username = document.getElementById("registerUsername").value
     const password = document.getElementById("registerPassword").value
 
-    const API_URL = 'https://login-api-projekt1.onrender.com/users'
+    const API_URL = window.env.API_URL
 
     try {
         const res = await fetch(`${API_URL}/register`, {
@@ -54,7 +54,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const email = document.getElementById("loginEmail").value
     const password = document.getElementById("loginPassword").value
 
-    const API_URL = 'https://login-api-projekt1.onrender.com/users'
+    const API_URL = window.env.API_URL
 
     try {
         const res = await fetch(`${API_URL}/login`, {
@@ -180,11 +180,51 @@ async function fetchNotes(currentBoardId) {
             noteDiv.className = "note"
             noteDiv.innerHTML = `
         <div class="note-header">
-          <button class="remove-btn">&times;</button>
+            <div class="note-buttons">
+                <span class="square yellow"></span>
+                <span class="square green"></span>
+                <span class="square pink"></span>
+            </div>
+            <button class="remove-btn">&times;</button>
         </div>
-        <textarea class="note-content">${note.text}</textarea>
+        <textarea class="note-content">${note.note}</textarea>
+        <button id="saveButton">Spara ändringar</button>
       `;
-            notesContainer.appendChild(noteDiv)
+
+            noteDiv.querySelector(".remove-btn").addEventListener("click", () => {
+                fetch(`http://localhost:8070/notes/${note.id}`, { method: "DELETE" })
+                    .then(res => res.json())
+                    .then(delData => {
+                        console.log("Deleted note:", delData);
+                        noteDiv.remove();
+                    })
+                    .catch(err => console.error(err));
+            });
+
+            noteDiv.querySelector('#saveButton').addEventListener("click", () => {
+                const updatedNote = noteDiv.querySelector(".note-content").value;
+
+                fetch(`http://localhost:8070/notes/${note.id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ text: updatedNote })
+                })
+                    .then(res => res.json())
+                    .then(updatedData => {
+                        console.log("Note updated: ", updatedData);
+                        alert("Din uppdaterade anteckning sparad!");
+                    })
+                    .catch(err => console.error("Error updating note: ", err));
+            });
+            noteDiv.querySelectorAll(".square").forEach(square => {
+                square.addEventListener("click", () => {
+                    noteDiv.classList.remove("yellow", "green", "pink");
+                    noteDiv.classList.add(square.classList[1]);
+                });
+            });
+            notesContainer.appendChild(noteDiv);
         });
 
         console.log("Fetched notes:", data)
