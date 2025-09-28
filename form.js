@@ -179,7 +179,7 @@ async function fetchNotes() {
         <button id="saveButton">Spara ändringar</button>
       `;
 
-        noteDiv.querySelector(".remove-btn").addEventListener("click", () => {
+            noteDiv.querySelector(".remove-btn").addEventListener("click", () => {
                 fetch(`http://localhost:8070/notes/${note.id}`, { method: "DELETE" })
                     .then(res => res.json())
                     .then(delData => {
@@ -190,23 +190,28 @@ async function fetchNotes() {
             });
 
             noteDiv.querySelector('#saveButton').addEventListener("click", () => {
-                    const updatedNote = noteDiv.querySelector(".note-content").value;
+                const updatedNote = noteDiv.querySelector(".note-content").value;
 
-                    fetch(`http://localhost:8070/notes/${note.id}`, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ text: updatedNote })
+                fetch(`http://localhost:8070/notes/${note.id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ text: updatedNote })
+                })
+                    .then(res => res.json())
+                    .then(updatedData => {
+                        console.log("Note updated: ", updatedData);
+                        alert("Din uppdaterade anteckning sparad!");
                     })
-                        .then(res => res.json())
-                        .then(updatedData => {
-                            console.log("Note updated: ", updatedData);
-                            alert("Din uppdaterade anteckning sparad!");
-                        })
-                        .catch(err => console.error("Error updating note: ", err));
+                    .catch(err => console.error("Error updating note: ", err));
+            });
+            noteDiv.querySelectorAll(".square").forEach(square => {
+                square.addEventListener("click", () => {
+                    noteDiv.classList.remove("yellow", "green", "pink");
+                    noteDiv.classList.add(square.classList[1]);
                 });
-
+            });
             notesContainer.appendChild(noteDiv);
         });
 
