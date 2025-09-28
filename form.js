@@ -1,3 +1,5 @@
+const REST_API_URL = window.env.REST_API_URL
+const API_URL = window.env.API_URL
 const messageOutput = document.getElementById("message")
 
 let currentBoardId = null
@@ -23,7 +25,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const username = document.getElementById("registerUsername").value
     const password = document.getElementById("registerPassword").value
 
-    const API_URL = window.env.API_URL
+
 
     try {
         const res = await fetch(`${API_URL}/register`, {
@@ -54,8 +56,6 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const email = document.getElementById("loginEmail").value
     const password = document.getElementById("loginPassword").value
 
-    const API_URL = window.env.API_URL
-
     try {
         const res = await fetch(`${API_URL}/login`, {
             method: "POST",
@@ -74,7 +74,6 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             document.getElementById("showBoards").style.display = "block"
             document.getElementById("myPage").style.display = "block"
 
-
             fetchBoards()
         } else {
             messageOutput.textContent = "Fel lösenord eller e-post"
@@ -90,7 +89,7 @@ async function fetchBoards() {
     if (!token) return
 
     try {
-        const res = await fetch("http://localhost:8060/boards", {
+        const res = await fetch(`${REST_API_URL}/boards`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -103,16 +102,18 @@ async function fetchBoards() {
         console.log(data)
         const dropdown = document.getElementById("boardsDropdown")
         dropdown.innerHTML = ""
+        if (data != null) {
+            data.forEach((board, index) => {
+                const option = document.createElement("option")
+                option.value = board.id
+                option.textContent = board.name
 
-        data.forEach((board, index) => {
-            const option = document.createElement("option")
-            option.value = board.id
-            option.textContent = board.name
+                if (index === 0) option.selected = true
 
-            if (index === 0) option.selected = true
+                dropdown.appendChild(option)
+            })
+        }
 
-            dropdown.appendChild(option)
-        })
 
     } catch (error) {
         console.error("Kunde inte hämta boards")
@@ -123,8 +124,10 @@ async function fetchBoards() {
 boardsDropdown.addEventListener("change", (e) => {
     currentBoardId = e.target.value || null
     if (currentBoardId) {
-        if (!null)
+        if (!null) {
             fetchNotes(currentBoardId)
+            fetchDrawings(currentBoardId)
+        }
     } else {
         document.getElementById("myPage").innerHTML = ""
     }
@@ -137,7 +140,7 @@ createBoard.addEventListener("click", async () => {
     const token = localStorage.getItem("jwtToken")
 
     try {
-        const res = await fetch("http://localhost:8060/boards", {
+        const res = await fetch(`${REST_API_URL}/boards`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -164,7 +167,7 @@ async function fetchNotes(currentBoardId) {
     if (!token) return
 
     try {
-        const res = await fetch(`http://localhost:8060/notes/${currentBoardId}`, {
+        const res = await fetch(`${REST_API_URL}/notes/${currentBoardId}`, {
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
@@ -192,7 +195,7 @@ async function fetchNotes(currentBoardId) {
       `;
 
             noteDiv.querySelector(".remove-btn").addEventListener("click", () => {
-                fetch(`http://localhost:8070/notes/${note.id}`, { method: "DELETE" })
+                fetch(`${REST_API_URL}/notes/${note.id}`, { method: "DELETE" })
                     .then(res => res.json())
                     .then(delData => {
                         console.log("Deleted note:", delData);
@@ -204,7 +207,7 @@ async function fetchNotes(currentBoardId) {
             noteDiv.querySelector('#saveButton').addEventListener("click", () => {
                 const updatedNote = noteDiv.querySelector(".note-content").value;
 
-                fetch(`http://localhost:8070/notes/${note.id}`, {
+                fetch(`${REST_API_URL}/notes/${note.id}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
@@ -233,7 +236,21 @@ async function fetchNotes(currentBoardId) {
     }
 }
 
-
+async function fetchDrawings(currentBoardId) {
+    // GET
+    fetch(`${REST_API_URL}/drawings/${currentBoardId}`, {
+        headers:
+            { "Authorization": `Bearer ${token}` }
+    })
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(d => {
+                if (d.drawing && d.drawing.length > 0) {
+                    createCanvas(d.drawing, d.id, false, drawingContainer)
+                }
+            })
+        })
+}
 
 /*
 function logout() {
@@ -246,5 +263,3 @@ document.getElementById("logoutBtn").addEventListener("click", async (e) => {
     e.preventDefault()
     logout()
 }) */
-
-

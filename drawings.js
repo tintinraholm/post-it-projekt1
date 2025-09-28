@@ -1,3 +1,5 @@
+const token = localStorage.getItem("jwtToken")
+
 
 // Källor för ritfunktionen: W3Schools och ChatGPT
 function createCanvas(strokes, id, isNew, container) {
@@ -95,12 +97,10 @@ function createCanvas(strokes, id, isNew, container) {
         render()
     })
 
-    const token = localStorage.getItem("jwtToken")
-
     // POST
     if (saveBtn) {
         saveBtn.addEventListener("click", () => {
-            fetch(`http://localhost:8060/notes/${currentBoardId}`, {
+            fetch(`${REST_API_URL}/notes/${currentBoardId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -120,7 +120,7 @@ function createCanvas(strokes, id, isNew, container) {
     // PUT
     if (updateBtn) {
         updateBtn.addEventListener("click", () => {
-            fetch(`http://localhost:8060/drawings/${id}`, {
+            fetch(`${REST_API_URL}/drawings/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -135,7 +135,7 @@ function createCanvas(strokes, id, isNew, container) {
     // DELETE
     if (deleteBtn) {
         deleteBtn.addEventListener("click", () => {
-            fetch(`http://localhost:8060/drawings/${id}`, {
+            fetch(`${REST_API_URL}/drawings/${id}`, {
                 method: "DELETE",
                 headers: { "Authorization": `Bearer ${token}` }
             })
@@ -145,20 +145,6 @@ function createCanvas(strokes, id, isNew, container) {
     }
     initDragAndDrop()
 }
-
-// GET
-fetch(`http://localhost:8060/drawings/${currentBoardId}`, {
-    headers:
-        { "Authorization": `Bearer ${localStorage.getItem("jwtToken")}` }
-})
-    .then(res => res.json())
-    .then(data => {
-        data.forEach(d => {
-            if (d.drawing && d.drawing.length > 0) {
-                createCanvas(d.drawing, d.id, false, drawingContainer)
-            }
-        })
-    })
 
 // New drawing
 newDrawingBtn.addEventListener("click", () => {
