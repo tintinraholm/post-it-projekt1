@@ -100,7 +100,7 @@ function createCanvas(strokes, id, isNew, container) {
     // POST
     if (saveBtn) {
         saveBtn.addEventListener("click", () => {
-            fetch(`${REST_API_URL}/notes/${currentBoardId}`, {
+            fetch(`${REST_API_URL}/drawings/${currentBoardId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

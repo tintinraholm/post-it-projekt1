@@ -1,5 +1,6 @@
 const REST_API_URL = window.env.REST_API_URL
 const API_URL = window.env.API_URL
+
 const messageOutput = document.getElementById("message")
 
 let currentBoardId = null
@@ -124,10 +125,8 @@ async function fetchBoards() {
 boardsDropdown.addEventListener("change", (e) => {
     currentBoardId = e.target.value || null
     if (currentBoardId) {
-        if (!null) {
-            fetchNotes(currentBoardId)
-            fetchDrawings(currentBoardId)
-        }
+        fetchNotes(currentBoardId)
+        fetchDrawings(currentBoardId)
     } else {
         document.getElementById("myPage").innerHTML = ""
     }
@@ -179,6 +178,7 @@ async function fetchNotes(currentBoardId) {
         notesContainer.innerHTML = ""
 
         data.forEach(note => {
+            if (!note || !note.note) return
             const noteDiv = document.createElement("div")
             noteDiv.className = "note"
             noteDiv.innerHTML = `
@@ -237,19 +237,26 @@ async function fetchNotes(currentBoardId) {
 }
 
 async function fetchDrawings(currentBoardId) {
-    // GET
-    fetch(`${REST_API_URL}/drawings/${currentBoardId}`, {
-        headers:
-            { "Authorization": `Bearer ${token}` }
+    const token = localStorage.getItem("jwtToken")
+    if (!token) return
+
+    try {
+        const res = await fetch(`${REST_API_URL}/drawings/${currentBoardId}`, {
+            headers: { "Authorization": `Bearer ${token}` }
     })
-        .then(res => res.json())
-        .then(data => {
-            data.forEach(d => {
-                if (d.drawing && d.drawing.length > 0) {
-                    createCanvas(d.drawing, d.id, false, drawingContainer)
-                }
-            })
-        })
+    const data = await res.json()
+
+    const drawingContainer = document.getElementById("drawingContainer")
+    drawingContainer.innerHTML = ""
+
+    data.forEach(d => {
+        if (d.drawing && d.drawing.length > 0) {
+            createCanvas(d.drawing, d.id, false, drawingContainer)
+        }
+    })
+    } catch (error) {
+        console.error("Fel vid hämtning av drawings:", error)
+    }
 }
 
 /*
