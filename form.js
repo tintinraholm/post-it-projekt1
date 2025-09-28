@@ -2,7 +2,7 @@ const REST_API_URL = window.env.REST_API_URL
 const API_URL = window.env.API_URL
 
 const messageOutput = document.getElementById("message")
-
+const token = localStorage.getItem("jwtToken")
 let currentBoardId = null
 
 document.getElementById("showRegister").addEventListener("click", (e) => {
@@ -25,8 +25,6 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const email = document.getElementById("registerEmail").value
     const username = document.getElementById("registerUsername").value
     const password = document.getElementById("registerPassword").value
-
-
 
     try {
         const res = await fetch(`${API_URL}/register`, {
@@ -71,7 +69,6 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             messageOutput.textContent = "Inloggning lyckades!"
 
             document.getElementById("authContainer").style.display = "none"
-            //document.getElementById("logoutBtn").style.display = "block" 
             document.getElementById("showBoards").style.display = "block"
             document.getElementById("myPage").style.display = "block"
 
@@ -86,7 +83,6 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 })
 
 async function fetchBoards() {
-    const token = localStorage.getItem("jwtToken")
     if (!token) return
 
     try {
@@ -98,9 +94,8 @@ async function fetchBoards() {
             }
         })
 
-        const response = await res.json();
-        const data = response.boards;
-        console.log(data)
+        const response = await res.json()
+        const data = response.boards
         const dropdown = document.getElementById("boardsDropdown")
         dropdown.innerHTML = ""
         if (data != null) {
@@ -115,7 +110,6 @@ async function fetchBoards() {
             })
         }
 
-
     } catch (error) {
         console.error("Kunde inte hämta boards")
         return
@@ -124,6 +118,9 @@ async function fetchBoards() {
 
 boardsDropdown.addEventListener("change", (e) => {
     currentBoardId = e.target.value || null
+
+    document.querySelectorAll(".note, .canvas-container").forEach(el => el.remove())
+
     if (currentBoardId) {
         fetchNotes(currentBoardId)
         fetchDrawings(currentBoardId)
@@ -136,7 +133,7 @@ createBoard.addEventListener("click", async () => {
     const name = newBoardName.value.trim()
     if (!name) return alert("Skriv ett namn för boarden!")
 
-    const token = localStorage.getItem("jwtToken")
+
 
     try {
         const res = await fetch(`${REST_API_URL}/boards`, {
@@ -162,14 +159,12 @@ createBoard.addEventListener("click", async () => {
 })
 
 async function fetchNotes(currentBoardId) {
-    const token = localStorage.getItem("jwtToken")
     if (!token) return
 
     try {
         const res = await fetch(`${REST_API_URL}/notes/${currentBoardId}`, {
             headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
+                "Authorization": `Bearer ${token}`
             }
         })
 
@@ -179,56 +174,8 @@ async function fetchNotes(currentBoardId) {
 
         data.forEach(note => {
             if (!note || !note.note) return
-            const noteDiv = document.createElement("div")
-            noteDiv.className = "note"
-            noteDiv.innerHTML = `
-        <div class="note-header">
-            <div class="note-buttons">
-                <span class="square yellow"></span>
-                <span class="square green"></span>
-                <span class="square pink"></span>
-            </div>
-            <button class="remove-btn">&times;</button>
-        </div>
-        <textarea class="note-content">${note.note}</textarea>
-        <button id="saveButton">Spara ändringar</button>
-      `;
-
-            noteDiv.querySelector(".remove-btn").addEventListener("click", () => {
-                fetch(`${REST_API_URL}/notes/${note.id}`, { method: "DELETE" })
-                    .then(res => res.json())
-                    .then(delData => {
-                        console.log("Deleted note:", delData);
-                        noteDiv.remove();
-                    })
-                    .catch(err => console.error(err));
-            });
-
-            noteDiv.querySelector('#saveButton').addEventListener("click", () => {
-                const updatedNote = noteDiv.querySelector(".note-content").value;
-
-                fetch(`${REST_API_URL}/notes/${note.id}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ text: updatedNote })
-                })
-                    .then(res => res.json())
-                    .then(updatedData => {
-                        console.log("Note updated: ", updatedData);
-                        alert("Din uppdaterade anteckning sparad!");
-                    })
-                    .catch(err => console.error("Error updating note: ", err));
-            });
-            noteDiv.querySelectorAll(".square").forEach(square => {
-                square.addEventListener("click", () => {
-                    noteDiv.classList.remove("yellow", "green", "pink");
-                    noteDiv.classList.add(square.classList[1]);
-                });
-            });
-            notesContainer.appendChild(noteDiv);
-        });
+            renderNote(note, notesContainer)
+        })
 
         console.log("Fetched notes:", data)
     } catch (error) {
@@ -237,36 +184,24 @@ async function fetchNotes(currentBoardId) {
 }
 
 async function fetchDrawings(currentBoardId) {
-    const token = localStorage.getItem("jwtToken")
     if (!token) return
 
     try {
         const res = await fetch(`${REST_API_URL}/drawings/${currentBoardId}`, {
             headers: { "Authorization": `Bearer ${token}` }
-    })
-    const data = await res.json()
+        })
+        const data = await res.json()
 
-    const drawingContainer = document.getElementById("drawingContainer")
-    drawingContainer.innerHTML = ""
+        const drawingContainer = document.getElementById("drawingContainer")
+        drawingContainer.innerHTML = ""
 
-    data.forEach(d => {
-        if (d.drawing && d.drawing.length > 0) {
-            createCanvas(d.drawing, d.id, false, drawingContainer)
-        }
-    })
+        data.forEach(d => {
+            if (d.drawing && d.drawing.length > 0) {
+                createCanvas(d.drawing, d.id, false, drawingContainer)
+            }
+        })
+        initDragAndDrop()
     } catch (error) {
         console.error("Fel vid hämtning av drawings:", error)
     }
 }
-
-/*
-function logout() {
-  localStorage.removeItem("jwtToken")
-  document.getElementById("appSection").style.display = "none"
-  document.getElementById("authSection").style.display = "block"
-}
-
-document.getElementById("logoutBtn").addEventListener("click", async (e) => {
-    e.preventDefault()
-    logout()
-}) */

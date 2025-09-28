@@ -1,5 +1,3 @@
-const token = localStorage.getItem("jwtToken")
-
 
 // Källor för ritfunktionen: W3Schools och ChatGPT
 function createCanvas(strokes, id, isNew, container) {
@@ -108,12 +106,12 @@ function createCanvas(strokes, id, isNew, container) {
                 },
                 body: JSON.stringify({ author_id: 1, drawing: strokes })
             }).then(res => res.json())
-              .then(data => {
-                  console.log("Saved:", data)
-                  canvasDiv.remove()
-                  createCanvas(strokes, data.id, false, drawingContainer)
-                  initDragAndDrop()
-              })
+                .then(data => {
+                    console.log("Saved:", data)
+                    canvasDiv.remove()
+                    createCanvas(strokes, data.id, false, drawingContainer)
+                    initDragAndDrop()
+                })
         })
     }
 
@@ -128,7 +126,7 @@ function createCanvas(strokes, id, isNew, container) {
                 },
                 body: JSON.stringify({ drawing: strokes })
             }).then(res => res.json())
-              .then(data => console.log("Updated:", data))
+                .then(data => console.log("Updated:", data))
         })
     }
 
