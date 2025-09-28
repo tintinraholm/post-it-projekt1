@@ -6,11 +6,13 @@ body {
 
 #notesContainer {
     display: flex;
-    flex-wrap: wrap;  
-    gap: 10px; 
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-#newNoteBtn, #saveButton, #addBtn {
+#newNoteBtn,
+#saveButton,
+#addBtn {
     padding: 10px 20px;
     margin-bottom: 20px;
     font-size: 16px;

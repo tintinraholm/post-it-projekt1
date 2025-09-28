@@ -1,7 +1,11 @@
 // Drag and drop funktion för notes och drawings
 
 function dragstartHandler(ev) {
-    ev.dataTransfer.setData("text/plain", ev.currentTarget.id)
+    const el = ev.currentTarget
+    if (!el.id) {
+        el.id = `draggable-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
+    }
+    ev.dataTransfer.setData("text/plain", el.id)
 }
 
 function dragoverHandler(ev) {
@@ -11,6 +15,7 @@ function dragoverHandler(ev) {
 function dropHandler(ev) {
     ev.preventDefault()
     const id = ev.dataTransfer.getData("text/plain")
+    if (!id) return
     const elem = document.getElementById(id)
     if (!elem) return
 
@@ -29,7 +34,13 @@ document.body.addEventListener("drop", dropHandler)
 
 function initDragAndDrop() {
     document.querySelectorAll(".note, .canvas-container").forEach(el => {
+
+        if (!el.id) {
+            el.id = `draggable-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
+        }
+
         el.setAttribute("draggable", "true")
+        el.removeEventListener("dragstart", dragstartHandler)
         el.addEventListener("dragstart", dragstartHandler)
     })
 }
