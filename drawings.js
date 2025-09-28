@@ -87,28 +87,36 @@ function createCanvas(strokes, id, isNew, container) {
         render()
     })
 
+    const token = localStorage.getItem("jwtToken")
+
     // POST
     if (saveBtn) {
         saveBtn.addEventListener("click", () => {
-            fetch("http://localhost:8070/drawings", {
+            fetch(`http://localhost:8060/notes/${currentBoardId}`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ author_id: 1, drawing: strokes })
             }).then(res => res.json())
-              .then(data => {
-                  console.log("Saved:", data)
-                  canvasDiv.remove()
-                  createCanvas(strokes, data.id, false, boardsContainer)
-              })
+                .then(data => {
+                    console.log("Saved:", data)
+                    canvasDiv.remove()
+                    createCanvas(strokes, data.id, false, boardsContainer)
+                })
         })
     }
 
     // PUT
     if (updateBtn) {
         updateBtn.addEventListener("click", () => {
-            fetch(`http://localhost:8070/drawings/${id}`, {
+            fetch(`http://localhost:8060/drawings/${id}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ drawing: strokes })
             }).then(res => res.json()).then(data => console.log("Updated:", data))
         })
@@ -117,7 +125,10 @@ function createCanvas(strokes, id, isNew, container) {
     // DELETE
     if (deleteBtn) {
         deleteBtn.addEventListener("click", () => {
-            fetch(`http://localhost:8070/drawings/${id}`, { method: "DELETE" })
+            fetch(`http://localhost:8060/drawings/${id}`, {
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
+            })
                 .then(res => res.json())
                 .then(() => canvasDiv.remove())
         })
@@ -125,7 +136,10 @@ function createCanvas(strokes, id, isNew, container) {
 }
 
 // GET
-fetch("http://localhost:8070/drawings")
+fetch(`http://localhost:8060/drawings/${currentBoardId}`, {
+    headers:
+        { "Authorization": `Bearer ${localStorage.getItem("jwtToken")}` }
+})
     .then(res => res.json())
     .then(data => {
         data.forEach(d => {

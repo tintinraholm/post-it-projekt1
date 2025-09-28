@@ -41,15 +41,22 @@ newNoteBtn.addEventListener("click", () => {
       `;
     notesContainer.appendChild(editor);
 
+    const token = localStorage.getItem("jwtToken")
+
+
     editor.querySelector(".addBtn").addEventListener("click", () => {
+
         const text = editor.querySelector("textarea").value.trim();
         if (!text) return;
 
         // POST to backend
-        fetch("http://localhost:8070/notes", {
+        fetch(`http://localhost:8060/notes/${currentBoardId}`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ author_id: 1, text: text })
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ text: text })
         })
             .then(res => res.json())
             .then(data => {
@@ -79,7 +86,7 @@ newNoteBtn.addEventListener("click", () => {
 
                 // DELETE Back- and frontend
                 newNote.querySelector(".remove-btn").addEventListener("click", () => {
-                    fetch(`http://localhost:8070/notes/${dbId}`, { method: "DELETE" })
+                    fetch(`http://localhost:8060/notes/${dbId}`, { method: "DELETE", headers: { "Authorization": `Bearer ${token}` } })
                         .then(res => res.json())
                         .then(delData => {
                             console.log("Deleted note:", delData);
