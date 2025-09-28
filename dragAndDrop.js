@@ -3,7 +3,7 @@
 function dragstartHandler(ev) {
     const el = ev.currentTarget
     if (!el.id) {
-        el.id = `draggable-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
+        el.id = `draggable-${Date.now()}`
     }
     ev.dataTransfer.setData("text/plain", el.id)
 }
@@ -36,7 +36,7 @@ function initDragAndDrop() {
     document.querySelectorAll(".note, .canvas-container").forEach(el => {
 
         if (!el.id) {
-            el.id = `draggable-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
+            el.id = `draggable-${Date.now()}`
         }
 
         el.setAttribute("draggable", "true")

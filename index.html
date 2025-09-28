@@ -47,9 +47,6 @@
     </form>
   </div>
 
-   <!--Meddelande utskrivet på skärmen-->
-    <div id="message" style="color: grey;"></div>
-
   <!--Så här ser boardsen ut-->
   <div id="showBoards" style="display: none;">
     <h2>Mina Boards</h2>
@@ -60,24 +57,23 @@
     <button id="createBoard">Skapa board</button>
   </div>
 
-     <!--Meddelande utskrivet på skärmen-->
-    <div id="message" style="color: black;"></div>
-
-  <!--Knapp för att logga ut-->
-  <button id="logoutBtn">Logga ut</button>
+  <!--Meddelande utskrivet på skärmen-->
+  <div id="message"></div>
 
   <!--Innehållet i mina boards (notes/drawings)-->
   <div id="myPage" style="display: none;">
+    <button id="newNoteBtn">Skriv anteckning</button>
+    <button id="newDrawingBtn">Rita</button>
     <div id="notesSection">
-      <button id="newNoteBtn">Skriv anteckning</button><button id="newDrawingBtn">Rita</button>
       <div id="notesContainer"></div>
     </div>
 
-  <div id="drawingSection">
-    
-    <div id="newDrawingContainer"></div>
-    <div id="drawingContainer"></div>
-  </div></div>
+    <div id="drawingSection">
+
+      <div id="newDrawingContainer"></div>
+      <div id="drawingContainer"></div>
+    </div>
+  </div>
 </body>
 
 </html>

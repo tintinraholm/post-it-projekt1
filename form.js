@@ -5,11 +5,15 @@ const messageOutput = document.getElementById("message")
 const token = localStorage.getItem("jwtToken")
 let currentBoardId = null
 
+localStorage.clear()
+
+
 document.getElementById("showRegister").addEventListener("click", (e) => {
     e.preventDefault()
     loginForm.style.display = "none"
     registerForm.style.display = "block"
     messageOutput.textContent = ""
+    //localStorage.removeItem("jwtToken")
 })
 
 document.getElementById("showLogin").addEventListener("click", (e) => {
@@ -17,6 +21,7 @@ document.getElementById("showLogin").addEventListener("click", (e) => {
     registerForm.style.display = "none"
     loginForm.style.display = "block"
     messageOutput.textContent = ""
+    //localStorage.removeItem("jwtToken")
 })
 
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
@@ -70,7 +75,8 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
             document.getElementById("authContainer").style.display = "none"
             document.getElementById("showBoards").style.display = "block"
-
+            document.getElementById("boardsDropdown").innerHTML = ""
+            
             fetchBoards()
         } else {
             messageOutput.textContent = "Fel lösenord eller e-post"
@@ -130,9 +136,9 @@ boardsDropdown.addEventListener("change", (e) => {
 
 createBoard.addEventListener("click", async () => {
     const name = newBoardName.value.trim()
-    if (!name) return alert("Skriv ett namn för boarden!")
-
-    const token = localStorage.getItem("jwtToken")
+    if (!name) {
+        messageOutput.textContent = "Skriv ett namn för boarden!"
+    return }
 
     try {
         const res = await fetch(`${REST_API_URL}/boards`, {
