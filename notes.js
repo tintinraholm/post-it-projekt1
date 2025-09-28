@@ -28,7 +28,7 @@ newNoteBtn.addEventListener("click", () => {
         if (!text) return;
 
         // POST to backend
-        fetch("http://localhost:8080/notes", {
+        fetch("http://localhost:8070/notes", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ author_id: 1, text: text })
@@ -41,8 +41,6 @@ newNoteBtn.addEventListener("click", () => {
                 newNote.id = dbId;
                 newNote.dataset.id = dbId;
                 newNote.className = "note";
-                newNote.draggable = true
-                newNote.addEventListener("dragstart", dragstartHandler)
                 newNote.style.position = "relative";
                 newNote.style.display = "inline-block";
                 newNote.style.margin = "10px";
@@ -59,10 +57,11 @@ newNoteBtn.addEventListener("click", () => {
             <textarea class="note-content">${text}</textarea>
             <button id="saveButton">Spara ändringar</button>
         `;
+        notesContainer.appendChild(newNote)
 
                 // DELETE Back- and frontend
                 newNote.querySelector(".remove-btn").addEventListener("click", () => {
-                    fetch(`http://localhost:8080/notes/${dbId}`, { method: "DELETE" })
+                    fetch(`http://localhost:8070/notes/${dbId}`, { method: "DELETE" })
                         .then(res => res.json())
                         .then(delData => {
                             console.log("Deleted note:", delData);
@@ -74,7 +73,7 @@ newNoteBtn.addEventListener("click", () => {
                 newNote.querySelector('#saveButton').addEventListener("click", () => {
                     const updatedNote = newNote.querySelector(".note-content").value;
 
-                    fetch(`http://localhost:8080/notes/${dbId}`, {
+                    fetch(`http://localhost:8070/notes/${dbId}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json"
@@ -95,11 +94,8 @@ newNoteBtn.addEventListener("click", () => {
                     });
                 });
 
-                document.body.appendChild(newNote);
+                initDragAndDrop()
                 editor.remove();
             });
     })
 })
-
-notesContainer.addEventListener("dragover", dragoverHandler)
-notesContainer.addEventListener("drop", dropHandler)

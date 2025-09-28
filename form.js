@@ -149,7 +149,7 @@ async function fetchNotes() {
     if (!token) return;
 
     try {
-        const res = await fetch("http://localhost:8080/notes", {
+        const res = await fetch("http://localhost:8070/notes", {
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
@@ -180,7 +180,7 @@ async function fetchNotes() {
       `;
 
         noteDiv.querySelector(".remove-btn").addEventListener("click", () => {
-                fetch(`http://localhost:8080/notes/${note.id}`, { method: "DELETE" })
+                fetch(`http://localhost:8070/notes/${note.id}`, { method: "DELETE" })
                     .then(res => res.json())
                     .then(delData => {
                         console.log("Deleted note:", delData);
@@ -192,7 +192,7 @@ async function fetchNotes() {
             noteDiv.querySelector('#saveButton').addEventListener("click", () => {
                     const updatedNote = noteDiv.querySelector(".note-content").value;
 
-                    fetch(`http://localhost:8080/notes/${note.id}`, {
+                    fetch(`http://localhost:8070/notes/${note.id}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json"

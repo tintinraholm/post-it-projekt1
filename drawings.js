@@ -4,8 +4,6 @@ function createCanvas(strokes, id, isNew, container) {
     const canvasDiv = document.createElement("div")
     canvasDiv.className = "canvas-container"
     canvasDiv.id = `drawing-${id || Date.now()}`
-    canvasDiv.draggable = true
-    canvasDiv.addEventListener("dragstart", dragstartHandler)
 
     canvasDiv.style.position = "relative"
     canvasDiv.style.display = "inline-block"
@@ -70,6 +68,7 @@ function createCanvas(strokes, id, isNew, container) {
     render()
 
     canvas.addEventListener("mousedown", e => {
+        canvasDiv.draggable = false
         drawing = true
         currentStroke = [{ x: e.offsetX, y: e.offsetY }]
         ctx.beginPath()
@@ -87,6 +86,7 @@ function createCanvas(strokes, id, isNew, container) {
         if (!drawing) return
         drawing = false
         strokes.push({ color: brushColor.value, size: brushSize.value, points: currentStroke })
+        canvasDiv.draggable = true
     })
     canvas.addEventListener("mouseleave", () => { drawing = false })
 
@@ -98,7 +98,7 @@ function createCanvas(strokes, id, isNew, container) {
     // POST
     if (saveBtn) {
         saveBtn.addEventListener("click", () => {
-            fetch("http://localhost:8080/drawings", {
+            fetch("http://localhost:8070/drawings", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ author_id: 1, drawing: strokes })
@@ -107,6 +107,7 @@ function createCanvas(strokes, id, isNew, container) {
                   console.log("Saved:", data)
                   canvasDiv.remove()
                   createCanvas(strokes, data.id, false, drawingContainer)
+                  initDragAndDrop()
               })
         })
     }
@@ -114,7 +115,7 @@ function createCanvas(strokes, id, isNew, container) {
     // PUT
     if (updateBtn) {
         updateBtn.addEventListener("click", () => {
-            fetch(`http://localhost:8080/drawings/${id}`, {
+            fetch(`http://localhost:8070/drawings/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ drawing: strokes })
@@ -126,15 +127,16 @@ function createCanvas(strokes, id, isNew, container) {
     // DELETE
     if (deleteBtn) {
         deleteBtn.addEventListener("click", () => {
-            fetch(`http://localhost:8080/drawings/${id}`, { method: "DELETE" })
+            fetch(`http://localhost:8070/drawings/${id}`, { method: "DELETE" })
                 .then(res => res.json())
                 .then(() => canvasDiv.remove())
         })
     }
+    initDragAndDrop()
 }
 
 // GET
-fetch("http://localhost:8080/drawings")
+fetch("http://localhost:8070/drawings")
     .then(res => res.json())
     .then(data => {
         data.forEach(d => {
@@ -148,7 +150,3 @@ fetch("http://localhost:8080/drawings")
 newDrawingBtn.addEventListener("click", () => {
     createCanvas([], null, true, newDrawingContainer)
 })
-
-const drawingContainer = document.getElementById("drawingContainer")
-drawingContainer.addEventListener("dragover", dragoverHandler)
-drawingContainer.addEventListener("drop", dropHandler)
