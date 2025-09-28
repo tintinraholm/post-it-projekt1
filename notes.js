@@ -1,24 +1,6 @@
+
 const notesContainer = document.getElementById("notesContainer");
 const newNoteBtn = document.getElementById("newNoteBtn")
-
-function dragstartHandler(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function dragoverHandler(ev) {
-    ev.preventDefault();
-}
-
-function dropHandler(ev) {
-    ev.preventDefault();
-    const data = ev.dataTransfer.getData("text");
-    const note = document.getElementById(data);
-    const rect = ev.target.getBoundingClientRect();
-    //note.style.position = "absolute";
-    note.style.left = (ev.clientX - rect.left) + "px";
-    note.style.top = (ev.clientY - rect.top) + "px";
-    //ev.target.appendChild(note);
-}
 
 const addBtn = document.getElementById("addBtn");
 const noteText = document.getElementById("noteText");
@@ -59,11 +41,11 @@ newNoteBtn.addEventListener("click", () => {
                 newNote.id = dbId;
                 newNote.dataset.id = dbId;
                 newNote.className = "note";
-                newNote.setAttribute("draggable", "true");
-                newNote.setAttribute("ondragstart", "dragstartHandler(event)");
-                newNote.style.position = "absolute";
-                newNote.style.top = "10px";
-                newNote.style.left = "10px";
+                newNote.draggable = true
+                newNote.addEventListener("dragstart", dragstartHandler)
+                newNote.style.position = "relative";
+                newNote.style.display = "inline-block";
+                newNote.style.margin = "10px";
 
                 newNote.innerHTML = `
             <div class="note-header">
@@ -100,7 +82,5 @@ newNoteBtn.addEventListener("click", () => {
     })
 })
 
-
-
-
-
+notesContainer.addEventListener("dragover", dragoverHandler)
+notesContainer.addEventListener("drop", dropHandler)

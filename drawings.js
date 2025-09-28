@@ -1,7 +1,15 @@
+
 // Källor för ritfunktionen: W3Schools och ChatGPT
 function createCanvas(strokes, id, isNew, container) {
     const canvasDiv = document.createElement("div")
     canvasDiv.className = "canvas-container"
+    canvasDiv.id = `drawing-${id || Date.now()}`
+    canvasDiv.draggable = true
+    canvasDiv.addEventListener("dragstart", dragstartHandler)
+
+    canvasDiv.style.position = "relative"
+    canvasDiv.style.display = "inline-block"
+    canvasDiv.style.margin = "10px"
 
     canvasDiv.innerHTML = `
         <div class="canvas-controls">
@@ -21,7 +29,7 @@ function createCanvas(strokes, id, isNew, container) {
             </label>
             <button class="clearBtn">Clear</button>
         </div>
-        <canvas width="250" height="150" class="board"></canvas>
+        <canvas id="board-${id}" width="250" height="150" class="board"></canvas>
         <div class="canvas-actions">
             ${isNew ? '<button class="saveBtn" title="Save">💾</button>' : `
             <button class="updateBtn" title="Update">✏️</button>
@@ -98,7 +106,7 @@ function createCanvas(strokes, id, isNew, container) {
               .then(data => {
                   console.log("Saved:", data)
                   canvasDiv.remove()
-                  createCanvas(strokes, data.id, false, boardsContainer)
+                  createCanvas(strokes, data.id, false, drawingContainer)
               })
         })
     }
@@ -110,7 +118,8 @@ function createCanvas(strokes, id, isNew, container) {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ drawing: strokes })
-            }).then(res => res.json()).then(data => console.log("Updated:", data))
+            }).then(res => res.json())
+              .then(data => console.log("Updated:", data))
         })
     }
 
@@ -130,7 +139,7 @@ fetch("http://localhost:8070/drawings")
     .then(data => {
         data.forEach(d => {
             if (d.drawing && d.drawing.length > 0) {
-                createCanvas(d.drawing, d.id, false, boardsContainer)
+                createCanvas(d.drawing, d.id, false, drawingContainer)
             }
         })
     })
@@ -139,3 +148,7 @@ fetch("http://localhost:8070/drawings")
 newDrawingBtn.addEventListener("click", () => {
     createCanvas([], null, true, newDrawingContainer)
 })
+
+const drawingContainer = document.getElementById("drawingContainer")
+drawingContainer.addEventListener("dragover", dragoverHandler)
+drawingContainer.addEventListener("drop", dropHandler)

@@ -21,7 +21,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const username = document.getElementById("registerUsername").value;
     const password = document.getElementById("registerPassword").value;
 
-    const API_URL = 'http://localhost:8080/users'
+    const API_URL = 'https://login-api-projekt1.onrender.com/users'
 
     try {
         const res = await fetch(`${API_URL}/register`, {
@@ -52,7 +52,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const email = document.getElementById("loginEmail").value;
     const password = document.getElementById("loginPassword").value;
 
-    const API_URL = 'http://localhost:8080/users'
+    const API_URL = 'https://login-api-projekt1.onrender.com/users'
 
     try {
         const res = await fetch(`${API_URL}/login`, {
