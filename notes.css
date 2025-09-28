@@ -21,6 +21,13 @@ body {
     border-radius: 5px;
 }
 
+#newNoteBtn, #newDrawingBtn {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    margin: 10px auto;
+}
+
 #logoutBtn {
     display: none;
 }
@@ -125,4 +132,101 @@ body {
     white-space: pre-line;
     font-size: 20px;
     text-align: center;
+}
+
+#boardsDropdown {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background: white;
+    color: #4CAF50;       
+    border: none;        
+    border-radius: 5px;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+#createBoard {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background: white;
+    color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+}
+
+#newBoardName {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background: white;
+    color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+}
+
+#authContainer {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background: white;
+    color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+}
+
+#authContainer {
+    width: 350px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#authContainer form {
+    display: block;
+    flex-direction: column;
+}
+
+#authContainer h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: black;
+}
+
+#authContainer label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: black;
+}
+
+#authContainer input {
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+#authContainer button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+#authContainer button:hover {
+    background-color: #45a049;
 }

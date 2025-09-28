@@ -73,7 +73,6 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             document.getElementById("authContainer").style.display = "none"
             //document.getElementById("logoutBtn").style.display = "block" 
             document.getElementById("showBoards").style.display = "block"
-            document.getElementById("myPage").style.display = "block"
 
             fetchBoards()
         } else {
@@ -102,20 +101,15 @@ async function fetchBoards() {
         const data = response.boards;
         console.log(data)
         const dropdown = document.getElementById("boardsDropdown")
-        dropdown.innerHTML = ""
+        dropdown.innerHTML = '<option value="">Välj en board</option>';
         if (data != null) {
-            data.forEach((board, index) => {
+            data.forEach(board => {
                 const option = document.createElement("option")
                 option.value = board.id
                 option.textContent = board.name
-
-                if (index === 0) option.selected = true
-
                 dropdown.appendChild(option)
             })
         }
-
-
     } catch (error) {
         console.error("Kunde inte hämta boards")
         return
@@ -124,17 +118,22 @@ async function fetchBoards() {
 
 boardsDropdown.addEventListener("change", (e) => {
     currentBoardId = e.target.value || null
-    if (currentBoardId) {
+    if (currentBoardId != null) {
+        console.log("Vald board:", currentBoardId)
+        document.getElementById("myPage").style.display = "block"
         fetchNotes(currentBoardId)
         fetchDrawings(currentBoardId)
+        messageOutput.textContent = ""
     } else {
-        document.getElementById("myPage").innerHTML = ""
+        document.getElementById("myPage").style.display = "none"
     }
 })
 
 createBoard.addEventListener("click", async () => {
     const name = newBoardName.value.trim()
-    if (!name) return alert("Skriv ett namn för boarden!")
+    if (!name) {
+        messageOutput.textContent = "Skriv ett namn för boarden!"
+    return }
 
     const token = localStorage.getItem("jwtToken")
 
@@ -150,7 +149,7 @@ createBoard.addEventListener("click", async () => {
 
         const data = await res.json()
         if (res.ok) {
-            alert("Board skapad!")
+            messageOutput.textContent = "Board skapad"
             newBoardName.value = ""
             fetchBoards()
         } else {
@@ -243,17 +242,17 @@ async function fetchDrawings(currentBoardId) {
     try {
         const res = await fetch(`${REST_API_URL}/drawings/${currentBoardId}`, {
             headers: { "Authorization": `Bearer ${token}` }
-    })
-    const data = await res.json()
+        })
+        const data = await res.json()
 
-    const drawingContainer = document.getElementById("drawingContainer")
-    drawingContainer.innerHTML = ""
+        const drawingContainer = document.getElementById("drawingContainer")
+        drawingContainer.innerHTML = ""
 
-    data.forEach(d => {
-        if (d.drawing && d.drawing.length > 0) {
-            createCanvas(d.drawing, d.id, false, drawingContainer)
-        }
-    })
+        data.forEach(d => {
+            if (d.drawing && d.drawing.length > 0) {
+                createCanvas(d.drawing, d.id, false, drawingContainer)
+            }
+        })
     } catch (error) {
         console.error("Fel vid hämtning av drawings:", error)
     }

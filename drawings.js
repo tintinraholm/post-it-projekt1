@@ -106,7 +106,7 @@ function createCanvas(strokes, id, isNew, container) {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ author_id: 1, drawing: strokes })
+                body: JSON.stringify({ drawing: strokes })
             }).then(res => res.json())
               .then(data => {
                   console.log("Saved:", data)
