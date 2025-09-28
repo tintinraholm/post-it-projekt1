@@ -1,5 +1,24 @@
 const messageOutput = document.getElementById("message");
 
+function dragstartHandler(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function dragoverHandler(ev) {
+    ev.preventDefault();
+}
+
+function dropHandler(ev) {
+    ev.preventDefault();
+    const data = ev.dataTransfer.getData("text");
+    const note = document.getElementById(data);
+    const rect = ev.target.getBoundingClientRect();
+    //note.style.position = "absolute";
+    note.style.left = (ev.clientX - rect.left) + "px";
+    note.style.top = (ev.clientY - rect.top) + "px";
+    //ev.target.appendChild(note);
+}
+
 document.getElementById("showRegister").addEventListener("click", (e) => {
     e.preventDefault();
     loginForm.style.display = "none";
@@ -21,7 +40,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const username = document.getElementById("registerUsername").value;
     const password = document.getElementById("registerPassword").value;
 
-    const API_URL = 'http://localhost:8080/users'
+    const API_URL = window.env.API_URL
 
     try {
         const res = await fetch(`${API_URL}/register`, {
@@ -29,7 +48,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, username, password }),
         });
-
+        console.log("Status:", res.status);
         const data = await res.json();
         console.log("Register response:", data);
         if (res.ok) {
@@ -52,7 +71,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const email = document.getElementById("loginEmail").value;
     const password = document.getElementById("loginPassword").value;
 
-    const API_URL = 'http://localhost:8080/users'
+    const API_URL = window.env.API_URL
 
     try {
         const res = await fetch(`${API_URL}/login`, {
@@ -130,7 +149,7 @@ async function fetchNotes() {
     if (!token) return;
 
     try {
-        const res = await fetch("http://localhost:8070/notes", {
+        const res = await fetch("http://localhost:8080/notes", {
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
@@ -144,12 +163,50 @@ async function fetchNotes() {
         data.forEach(note => {
             const noteDiv = document.createElement("div");
             noteDiv.className = "note";
+            noteDiv.id = `note-${note.id}`;
+            noteDiv.setAttribute("draggable", "true");
+            noteDiv.setAttribute("ondragstart", "dragstartHandler(event)");
             noteDiv.innerHTML = `
         <div class="note-header">
-          <button class="remove-btn">&times;</button>
+            <div class="note-buttons">
+                <span class="square yellow"></span>
+                <span class="square green"></span>
+                <span class="square pink"></span>
+            </div>
+            <button class="remove-btn">&times;</button>
         </div>
         <textarea class="note-content">${note.note}</textarea>
+        <button id="saveButton">Spara ändringar</button>
       `;
+
+        noteDiv.querySelector(".remove-btn").addEventListener("click", () => {
+                fetch(`http://localhost:8080/notes/${note.id}`, { method: "DELETE" })
+                    .then(res => res.json())
+                    .then(delData => {
+                        console.log("Deleted note:", delData);
+                        noteDiv.remove();
+                    })
+                    .catch(err => console.error(err));
+            });
+
+            noteDiv.querySelector('#saveButton').addEventListener("click", () => {
+                    const updatedNote = noteDiv.querySelector(".note-content").value;
+
+                    fetch(`http://localhost:8080/notes/${note.id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ text: updatedNote })
+                    })
+                        .then(res => res.json())
+                        .then(updatedData => {
+                            console.log("Note updated: ", updatedData);
+                            alert("Din uppdaterade anteckning sparad!");
+                        })
+                        .catch(err => console.error("Error updating note: ", err));
+                });
+
             notesContainer.appendChild(noteDiv);
         });
 

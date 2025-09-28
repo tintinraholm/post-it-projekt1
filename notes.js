@@ -1,5 +1,7 @@
-const notesContainer = document.getElementById("notesContainer");
+const notesContainer = document.getElementById("notesContainer")
 const newNoteBtn = document.getElementById("newNoteBtn")
+const saveButton = document.getElementById("saveButton")
+
 
 function dragstartHandler(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
@@ -14,7 +16,7 @@ function dropHandler(ev) {
     const data = ev.dataTransfer.getData("text");
     const note = document.getElementById(data);
     const rect = ev.target.getBoundingClientRect();
-    //note.style.position = "absolute";
+    note.style.position = "absolute";
     note.style.left = (ev.clientX - rect.left) + "px";
     note.style.top = (ev.clientY - rect.top) + "px";
     //ev.target.appendChild(note);
@@ -36,8 +38,8 @@ newNoteBtn.addEventListener("click", () => {
     editor.className = "notes-editor";
 
     editor.innerHTML = `
-        <textarea rows="3" cols="40" placeholder="Write your note here"></textarea><br>
-        <button class="addBtn">Create</button>
+        <textarea rows="3" cols="40" placeholder="Skriv din nya anteckning här"></textarea><br>
+        <button class="addBtn">Skapa</button>
       `;
     notesContainer.appendChild(editor);
 
@@ -46,7 +48,7 @@ newNoteBtn.addEventListener("click", () => {
         if (!text) return;
 
         // POST to backend
-        fetch("http://localhost:8070/notes", {
+        fetch("http://localhost:8080/notes", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ author_id: 1, text: text })
@@ -61,10 +63,6 @@ newNoteBtn.addEventListener("click", () => {
                 newNote.className = "note";
                 newNote.setAttribute("draggable", "true");
                 newNote.setAttribute("ondragstart", "dragstartHandler(event)");
-                newNote.style.position = "absolute";
-                newNote.style.top = "10px";
-                newNote.style.left = "10px";
-
                 newNote.innerHTML = `
             <div class="note-header">
                 <div class="note-buttons">
@@ -74,18 +72,37 @@ newNoteBtn.addEventListener("click", () => {
                 </div>
                 <button class="remove-btn">&times;</button>
             </div>
-            <textarea class="note-content" rows="6">${text}</textarea>
+            <textarea class="note-content">${text}</textarea>
+            <button id="saveButton">Spara ändringar</button>
         `;
 
                 // DELETE Back- and frontend
                 newNote.querySelector(".remove-btn").addEventListener("click", () => {
-                    fetch(`http://localhost:8070/notes/${dbId}`, { method: "DELETE" })
+                    fetch(`http://localhost:8080/notes/${dbId}`, { method: "DELETE" })
                         .then(res => res.json())
                         .then(delData => {
                             console.log("Deleted note:", delData);
                             newNote.remove();
                         })
                         .catch(err => console.error(err));
+                });
+                // Uppdatera en existerande note
+                newNote.querySelector('#saveButton').addEventListener("click", () => {
+                    const updatedNote = newNote.querySelector(".note-content").value;
+
+                    fetch(`http://localhost:8080/notes/${dbId}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ text: updatedNote })
+                    })
+                        .then(res => res.json())
+                        .then(updatedData => {
+                            console.log("Note updated: ", updatedData);
+                            alert("Din uppdaterade anteckning sparad!");
+                        })
+                        .catch(err => console.error("Error updating note: ", err));
                 });
                 newNote.querySelectorAll(".square").forEach(square => {
                     square.addEventListener("click", () => {
