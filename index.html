@@ -10,30 +10,18 @@
   <link rel="stylesheet" href="pasteBin.css">
   <script src="config.js" defer></script>
   <script src="dragAndDrop.js" defer></script>
-  <!--<script src="form.js" defer></script>-->
+  <script src="form.js" defer></script>
   <script src="drawings.js" defer></script>
   <script src="notes.js" defer></script>
+  <script src="https://websocket-projekt2.onrender.com/socket.io/socket.io.js" defer></script>
   <script src="pasteBin.js" defer></script>
 </head>
 
 <body ondrop="dropHandler(event)" ondragover="dragoverHandler(event)">
   <h1>Min anteckningssida</h1>
-  <!-- Välj projekt 1 eller projekt 2 -->
-   <div id="menu">
-    <button id="postIt">Post-it projekt</button>
-    <button id="pasteBin">Paste bin</button>
-   </div>
-
-   <!-- Paste Bin -->
-    <div id="pasteBinDiv">
-      <input id="paste" type="text" placeholder="Paste here...">
-      <div id="pastedValue"></div>
-      <idv id="status"></idv>
-      <button id="backBtn">⬅ Tillbaka</button>
-    </div>
 
   <!-- Inloggnings-formulär -->
-  <!--<div id="authContainer">
+  <div id="authContainer">
     <form id="loginForm">
       <h3>Logga in:</h3>
       <label>Email</label>
@@ -44,10 +32,10 @@
       <p>
         Har du inget konto? <a href="#" id="showRegister">Registrera dig</a>
       </p>
-    </form>-->
+    </form>
 
     <!-- Registrerings-formulär -->
-    <!--<form id="registerForm" style="display: none;">
+    <form id="registerForm" style="display: none;">
       <h3>Registrera dig:</h3>
       <label>Användarnamn</label>
       <input type="text" id="registerUsername" required><br>
@@ -60,7 +48,21 @@
         Har du redan konto? <a href="#" id="showLogin">Logga in</a>
       </p>
     </form>
-  </div>-->
+  </div>
+
+  <!-- Välj projekt 1 eller projekt 2 -->
+  <div id="menu" style="display: none;">
+    <button id="postIt">Post-it projekt</button>
+    <button id="pasteBin">Paste bin</button>
+  </div>
+
+  <!-- Paste Bin -->
+  <div id="pasteBinDiv" style="display: none;">
+    <input id="paste" type="text" placeholder="Paste here...">
+    <div id="pastedValue"></div>
+    <div id="status">text</div>
+    <button id="backBtn">⬅ Tillbaka</button>
+  </div>
 
   <!--Så här ser boardsen ut-->
   <div id="showBoards" style="display: none;">
@@ -70,6 +72,7 @@
     </select>
     <input type="text" id="newBoardName" placeholder="Ny board">
     <button id="createBoard">Skapa board</button>
+    <button id="backToMenu">⬅ Tillbaka</button>
   </div>
 
   <!--Meddelande utskrivet på skärmen-->
