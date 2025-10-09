@@ -53,9 +53,43 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
 })
 
+window.addEventListener("load", async () => {
+    const refreshToken = localStorage.getItem("refreshToken")
+    if (!refreshToken) return;
+
+    try {
+        const res = await fetch(`${API_URL}/refresh`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${refreshToken}`
+            }
+        })
+
+        if (res.ok) {
+            const data = await res.json()
+            localStorage.setItem("jwtToken", data.token)
+            console.log("Access-token förnyad!")
+
+            document.getElementById("authContainer").style.display = "none"
+            document.getElementById("pasteBinDiv").style.display = "block"
+            document.getElementById("logout").style.display = "block"
+
+            // Initiera socket direkt efter refresh
+            initSocket(data.token)
+        } else {
+            console.log("Refresh misslyckades, loggar ut.")
+            localStorage.removeItem("refreshToken")
+            localStorage.removeItem("jwtToken")
+        }
+    } catch (error) {
+        console.log("Gick inte att refresha")
+    }
+})
+
+// Efter login
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault()
-
     const email = document.getElementById("loginEmail").value
     const password = document.getElementById("loginPassword").value
 
@@ -68,25 +102,16 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
         const data = await res.json()
         if (res.ok) {
-            console.log("Login response:", data)
             localStorage.setItem("jwtToken", data.token)
             localStorage.setItem("refreshToken", data.refreshToken)
             messageOutput.textContent = "Inloggning lyckades!"
 
-            fetchSocketIo()
             document.getElementById("authContainer").style.display = "none"
             document.getElementById("menu").style.display = "block"
-            messageOutput.textContent = ""
-            //document.getElementById("boardsDropdown").innerHTML = ""
-
-            // Välj projekt
-            postItBtn.addEventListener("click", () => {
-                document.getElementById("menu").style.display = "none"
-                document.getElementById("showBoards").style.display = "block"
-                fetchBoards()
-            })
-            
             document.getElementById("logout").style.display = "block"
+
+            // Initiera socket efter login
+            initSocket(data.token)
 
         } else {
             messageOutput.textContent = "Fel lösenord eller e-post"
@@ -96,6 +121,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         messageOutput.textContent = "Något gick fel. Försök igen."
     }
 })
+
 
 document.getElementById("backToMenu")?.addEventListener("click", () => {
     document.getElementById("showBoards").style.display = "none"
@@ -259,7 +285,7 @@ logout.addEventListener("click", async () => {
 })
 
 //refresh.addEventListener("click", async () => {})
-
+/*
 window.addEventListener("load", async () => {
     const refreshToken = localStorage.getItem("refreshToken")
 
@@ -290,4 +316,4 @@ window.addEventListener("load", async () => {
     } catch (error) {
         console.log("gick inte att refresha")
     }
-})
+})*/
