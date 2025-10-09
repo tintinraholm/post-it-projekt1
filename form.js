@@ -1,11 +1,10 @@
-const REST_API_URL = window.env.REST_API_URL
-const API_URL = window.env.API_URL
+const API_URL = "https://login-api-projekt1.onrender.com/users"
+const REST_API_URL = "https://rest-api-projekt1.onrender.com"
 
 const messageOutput = document.getElementById("message")
 const token = localStorage.getItem("jwtToken")
+const refreshToken = localStorage.getItem("refreshToken")
 let currentBoardId = null
-
-localStorage.clear()
 
 
 document.getElementById("showRegister").addEventListener("click", (e) => {
@@ -13,7 +12,6 @@ document.getElementById("showRegister").addEventListener("click", (e) => {
     loginForm.style.display = "none"
     registerForm.style.display = "block"
     messageOutput.textContent = ""
-    //localStorage.removeItem("jwtToken")
 })
 
 document.getElementById("showLogin").addEventListener("click", (e) => {
@@ -21,7 +19,6 @@ document.getElementById("showLogin").addEventListener("click", (e) => {
     registerForm.style.display = "none"
     loginForm.style.display = "block"
     messageOutput.textContent = ""
-    //localStorage.removeItem("jwtToken")
 })
 
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
@@ -71,12 +68,15 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         if (res.ok) {
             console.log("Login response:", data)
             localStorage.setItem("jwtToken", data.token)
+            localStorage.setItem("refreshToken", data.refreshToken)
             messageOutput.textContent = "Inloggning lyckades!"
 
             document.getElementById("authContainer").style.display = "none"
             document.getElementById("showBoards").style.display = "block"
             document.getElementById("boardsDropdown").innerHTML = ""
-            
+            document.getElementById("logout").style.display = "block"
+
+
             fetchBoards()
         } else {
             messageOutput.textContent = "Fel lösenord eller e-post"
@@ -138,7 +138,8 @@ createBoard.addEventListener("click", async () => {
     const name = newBoardName.value.trim()
     if (!name) {
         messageOutput.textContent = "Skriv ett namn för boarden!"
-    return }
+        return
+    }
 
     try {
         const res = await fetch(`${REST_API_URL}/boards`, {
@@ -210,3 +211,69 @@ async function fetchDrawings(currentBoardId) {
         console.error("Fel vid hämtning av drawings:", error)
     }
 }
+
+logout.addEventListener("click", async () => {
+
+    const refreshToken = localStorage.getItem("refreshToken")
+    console.log(refreshToken)
+
+    try {
+        const res = await fetch(`${API_URL}/logout`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${refreshToken}`
+            },
+        })
+
+        console.log(refreshToken)
+
+        if (!res.ok) {
+            const error = await res.json();
+            console.error("Logout misslyckades:", error.msg);
+            return;
+        }
+
+        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("jwtToken")
+        console.log("Utloggad!");
+        window.location.href = "/post-it-projekt1/"
+
+    } catch (error) {
+        console.log("Gick inte att radera")
+    }
+})
+
+//refresh.addEventListener("click", async () => {})
+
+window.addEventListener("load", async () => {
+    const refreshToken = localStorage.getItem("refreshToken")
+
+    if (!refreshToken) return;
+    try {
+        const res = await fetch(`${API_URL}/refresh`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${refreshToken}`
+            }
+        })
+
+        if (res.ok) {
+            const data = await res.json()
+            localStorage.setItem("jwtToken", data.token)
+            console.log("Access-token förnyad!")
+
+            document.getElementById("authContainer").style.display = "none"
+            document.getElementById("showBoards").style.display = "block"
+            document.getElementById("boardsDropdown").innerHTML = ""
+            document.getElementById("logout").style.display = "block"
+        }
+        else {
+            console.log("Refresh misslyckades, loggar ut.")
+            localStorage.removeItem("refreshToken")
+            localStorage.removeItem("jwtToken")
+        }
+    } catch (error) {
+        console.log("gick inte att refresha")
+    }
+})
