@@ -86,12 +86,8 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
                 fetchBoards()
             })
             
-            document.getElementById("showBoards").style.display = "block"
-            document.getElementById("boardsDropdown").innerHTML = ""
             document.getElementById("logout").style.display = "block"
 
-
-            fetchBoards()
         } else {
             messageOutput.textContent = "Fel lösenord eller e-post"
         }
@@ -255,7 +251,7 @@ logout.addEventListener("click", async () => {
         localStorage.removeItem("refreshToken")
         localStorage.removeItem("jwtToken")
         console.log("Utloggad!");
-        window.location.href = "/post-it-projekt1/"
+        window.location.href = "/index.html"
 
     } catch (error) {
         console.log("Gick inte att radera")
@@ -283,8 +279,7 @@ window.addEventListener("load", async () => {
             console.log("Access-token förnyad!")
 
             document.getElementById("authContainer").style.display = "none"
-            document.getElementById("showBoards").style.display = "block"
-            document.getElementById("boardsDropdown").innerHTML = ""
+            document.getElementById("pasteBinDiv").style.display = "block"
             document.getElementById("logout").style.display = "block"
         }
         else {

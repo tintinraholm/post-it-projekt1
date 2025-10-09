@@ -44,6 +44,10 @@ function fetchSocketIo() {
         statusText.textContent = `Disconnected (${reason})`
         reconnectBtn.style.display = "inline-block"
         console.log('Disconnected:', reason)
+        /*const newToken = localStorage.getItem("jwtToken")
+        socket = io("https://websocket-projekt2.onrender.com", {
+        auth: { token: newToken }
+    })*/
     })
 
     socket.on("reconnect_attempt", (attemptNumber) => {
