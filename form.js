@@ -71,6 +71,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             localStorage.setItem("jwtToken", data.token)
             messageOutput.textContent = "Inloggning lyckades!"
 
+            fetchSocketIo()
             document.getElementById("authContainer").style.display = "none"
             document.getElementById("menu").style.display = "block"
             messageOutput.textContent = ""
