@@ -1,9 +1,10 @@
-const REST_API_URL = "https://rest-api-projekt1.onrender.com"
 const API_URL = "https://login-api-projekt1.onrender.com/users"
+const REST_API_URL = "https://rest-api-projekt1.onrender.com"
 
 const postItBtn = document.getElementById("postIt")
 const messageOutput = document.getElementById("message")
 const token = localStorage.getItem("jwtToken")
+const refreshToken = localStorage.getItem("refreshToken")
 let currentBoardId = null
 
 
@@ -69,6 +70,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         if (res.ok) {
             console.log("Login response:", data)
             localStorage.setItem("jwtToken", data.token)
+            localStorage.setItem("refreshToken", data.refreshToken)
             messageOutput.textContent = "Inloggning lyckades!"
 
             fetchSocketIo()
@@ -84,6 +86,12 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
                 fetchBoards()
             })
             
+            document.getElementById("showBoards").style.display = "block"
+            document.getElementById("boardsDropdown").innerHTML = ""
+            document.getElementById("logout").style.display = "block"
+
+
+            fetchBoards()
         } else {
             messageOutput.textContent = "Fel lösenord eller e-post"
         }
@@ -222,3 +230,69 @@ async function fetchDrawings(currentBoardId) {
         console.error("Fel vid hämtning av drawings:", error)
     }
 }
+
+logout.addEventListener("click", async () => {
+
+    const refreshToken = localStorage.getItem("refreshToken")
+    console.log(refreshToken)
+
+    try {
+        const res = await fetch(`${API_URL}/logout`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${refreshToken}`
+            },
+        })
+
+        console.log(refreshToken)
+
+        if (!res.ok) {
+            const error = await res.json();
+            console.error("Logout misslyckades:", error.msg);
+            return;
+        }
+
+        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("jwtToken")
+        console.log("Utloggad!");
+        window.location.href = "/post-it-projekt1/"
+
+    } catch (error) {
+        console.log("Gick inte att radera")
+    }
+})
+
+//refresh.addEventListener("click", async () => {})
+
+window.addEventListener("load", async () => {
+    const refreshToken = localStorage.getItem("refreshToken")
+
+    if (!refreshToken) return;
+    try {
+        const res = await fetch(`${API_URL}/refresh`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${refreshToken}`
+            }
+        })
+
+        if (res.ok) {
+            const data = await res.json()
+            localStorage.setItem("jwtToken", data.token)
+            console.log("Access-token förnyad!")
+
+            document.getElementById("authContainer").style.display = "none"
+            document.getElementById("showBoards").style.display = "block"
+            document.getElementById("boardsDropdown").innerHTML = ""
+            document.getElementById("logout").style.display = "block"
+        }
+        else {
+            console.log("Refresh misslyckades, loggar ut.")
+            localStorage.removeItem("refreshToken")
+            localStorage.removeItem("jwtToken")
+        }
+    } catch (error) {
+        console.log("gick inte att refresha")
+    }
+})
