@@ -20,6 +20,7 @@ const menu = document.getElementById("menu")
     // Enkel funktion: visa text från input i visningsrutan
     pasteInput.addEventListener("keyup", (e) => {
       if (e.key === "Enter") {
+        
         pastedValue.textContent = pasteInput.value
         pasteInput.value = ""
       }
