@@ -1,6 +1,5 @@
 let socket = null
 
-// Funktion för att initiera socket + event handlers
 function initSocket(jwtToken) {
     if (!jwtToken) return
 
@@ -21,7 +20,6 @@ function initSocket(jwtToken) {
     const statusText = document.getElementById("status")
     const reconnectBtn = document.getElementById("reconnect")
 
-    // Visa/hide pastebin
     pasteBtn.addEventListener("click", () => {
         menu.style.display = "none"
         pasteBinDiv.style.display = "block"
@@ -32,7 +30,6 @@ function initSocket(jwtToken) {
         menu.style.display = "block"
     })
 
-    // Enter → skicka meddelande
     pasteInput.addEventListener("keyup", (e) => {
         if (e.key === "Enter" && pasteInput.value.trim() !== "") {
             socket.emit("chat message", pasteInput.value)
@@ -40,29 +37,27 @@ function initSocket(jwtToken) {
         }
     })
 
-    // Socket.IO events
     socket.on("connect", () => {
-        statusText.textContent = "✅ Connected"
+        statusText.textContent = "Ansluten"
         reconnectBtn.style.display = "none"
         console.log("Connected with JWT:", jwtToken)
     })
 
     socket.on("disconnect", (reason) => {
-        statusText.textContent = `❌ Disconnected (${reason})`
+        statusText.textContent = `Frånkopplad (${reason})`
         reconnectBtn.style.display = "inline-block"
     })
 
     socket.on("reconnect_attempt", (attempt) => {
-        statusText.textContent = `🔄 Trying to reconnect... (attempt ${attempt})`
+        statusText.textContent = `Försöker återansluta... (attempt ${attempt})`
     })
 
     socket.on("connect_error", (err) => {
-        statusText.textContent = `⚠️ Connection failed: ${err.message}`
+        statusText.textContent = `Anslutning misslyckades: ${err.message}`
         reconnectBtn.style.display = "inline-block"
         console.error("Connection failed:", err.message)
     })
 
-    // Ta emot meddelanden från andra clients
     socket.on("chat message", (msg) => {
         pastedValue.textContent = msg.text
     })
@@ -70,7 +65,7 @@ function initSocket(jwtToken) {
     // Reconnect-knapp
     reconnectBtn.addEventListener("click", () => {
         if (!socket.connected) {
-            statusText.textContent = "🔄 Trying to reconnect..."
+            statusText.textContent = "Försöker återansluta..."
             reconnectBtn.style.display = "none"
             socket.connect()
         }
