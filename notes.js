@@ -1,4 +1,3 @@
-const notesContainer = document.getElementById("notesContainer")
 const newNoteBtn = document.getElementById("newNoteBtn")
 
 const addBtn = document.getElementById("addBtn")

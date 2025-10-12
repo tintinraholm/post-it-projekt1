@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="drawings.css">
   <link rel="stylesheet" href="notes.css">
   <link rel="stylesheet" href="pasteBin.css">
-  <script src="config.js" defer></script>
   <script src="dragAndDrop.js" defer></script>
   <script src="form.js" defer></script>
   <script src="drawings.js" defer></script>
@@ -50,6 +49,9 @@
     </form>
   </div>
 
+  <!--Logout-knapp-->
+  <button type="submit" id="logout" style="display: none;">Logga ut</button>
+
   <!-- Välj projekt 1 eller projekt 2 -->
   <div id="menu" style="display: none;">
     <button id="postIt">Post-it projekt</button>
@@ -58,11 +60,11 @@
 
   <!-- Paste Bin -->
   <div id="pasteBinDiv" style="display: none;">
-    <input id="paste" type="text" placeholder="Paste here...">
+    <input id="paste" type="text" placeholder="Pastea här...">
     <div id="pastedValue"></div>
-    <div id="status">Connecting...</div>
-    <button id="reconnect" style="display: none;">Reconnect</button>
-    <button id="backBtn">⬅ Back</button>
+    <div id="status">Ansluter...</div>
+    <button id="reconnect" style="display: none;">Anslut</button>
+    <button id="backBtn">⬅ Tillbaka</button>
   </div>
 
   <!--Så här ser boardsen ut-->
