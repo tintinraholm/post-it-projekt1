@@ -20,6 +20,17 @@
   border-radius: 5px;
 }
 
+#logout {
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background: #610051;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
 #pasteBinDiv {
   background-color: #ec63ae;
   padding: 20px;
