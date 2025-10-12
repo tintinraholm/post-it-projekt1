@@ -146,7 +146,9 @@ window.addEventListener("load", async () => {
 // Tillbaka till menyn
 backToMenuBtn.addEventListener("click", () => {
     showBoards.style.display = "none"
+    document.getElementById("myPage").style.display = "none"
     menu.style.display = "block"
+    currentBoardId = null
 })
 
 // Logga ut
