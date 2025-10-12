@@ -174,6 +174,16 @@ logoutBtn.addEventListener("click", async () => {
     }
 })
 
+// Gå till projekt 1
+postItBtn.addEventListener("click", async () => {
+    menu.style.display = "none"
+    showBoards.style.display = "block"
+    document.getElementById("myPage").style.display = "none"
+    messageOutput.textContent = ""
+
+    await fetchBoards()
+})
+
 // Hämta boards
 async function fetchBoards() {
     if (!token) return
