@@ -27,7 +27,8 @@ body {
     border-radius: 5px;
 }
 
-#newNoteBtn, #newDrawingBtn {
+#newNoteBtn,
+#newDrawingBtn {
     display: flex;
     flex-direction: row;
     gap: 5px;
@@ -141,8 +142,8 @@ body {
     font-size: 16px;
     cursor: pointer;
     background: white;
-    color: #4CAF50;       
-    border: none;        
+    color: #4CAF50;
+    border: none;
     border-radius: 5px;
     background-size: 16px;
     padding-right: 40px;
@@ -188,7 +189,7 @@ body {
     border: 1px solid #ccc;
     border-radius: 10px;
     background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
     text-align: center;
 }

@@ -37,6 +37,7 @@ function initSocket(jwtToken) {
         }
     })
 
+    // Socket status
     socket.on("connect", () => {
         statusText.textContent = "Ansluten"
         reconnectBtn.style.display = "none"
@@ -63,11 +64,49 @@ function initSocket(jwtToken) {
     })
 
     // Reconnect-knapp
-    reconnectBtn.addEventListener("click", () => {
+    reconnectBtn.addEventListener("click", async () => {
         if (!socket.connected) {
-            statusText.textContent = "Försöker återansluta..."
+            statusText.textContent = "Försöker förnya token..."
             reconnectBtn.style.display = "none"
-            socket.connect()
+
+            let refreshToken = localStorage.getItem("refreshToken")
+            if (!refreshToken) {
+                statusText.textContent = "Ingen token hittades, logga in igen."
+                reconnectBtn.style.display = "block"
+                return
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/refresh`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${refreshToken}`
+                    }
+                })
+
+                if (res.ok) {
+                    const data = await res.json()
+                    localStorage.setItem("jwtToken", data.token)
+                    token = data.token
+                    console.log("Access-token förnyad!")
+
+                    initSocket(token)
+
+                    authContainer.style.display = "none"
+                    document.getElementById("pasteBinDiv").style.display = "block"
+                    logoutBtn.style.display = "block"
+
+                } else {
+                    console.log("Refresh misslyckades, loggar ut.")
+                    localStorage.removeItem("refreshToken")
+                    localStorage.removeItem("jwtToken")
+                }
+            } catch (error) {
+                console.log("Gick inte att refresha")
+            }
+
+
         }
     })
 }
